@@ -27,6 +27,20 @@ class SearchRequest(BaseModel):
     query: str
     platform: str | None = None
 
+@app.get("/platforms")
+@app.post("/platforms")
+def get_platforms():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Grab all unique platform IDs that actually have entries
+    cursor.execute("SELECT DISTINCT platform_id FROM entries WHERE platform_id IS NOT NULL AND platform_id != '' ORDER BY platform_id ASC")
+    rows = cursor.fetchall()
+    conn.close()
+
+    platforms = [row[0] for row in rows]
+    return {"platforms": platforms}
+
 @app.post("/entry")
 def get_entry(req: EntryRequest):
     conn = get_db_connection()
