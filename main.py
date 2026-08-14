@@ -1,12 +1,15 @@
+import os
+import sqlite3
 from fastapi import FastAPI
 from pydantic import BaseModel
-import sqlite3
 
-app = FastAPI() # Create an instance of the app
+app = FastAPI()
 
-# Database helper function
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "local_crocdb.sqlite")
+
 def get_db_connection():
-    conn = sqlite3.connect('local_crocdb.sqlite')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
