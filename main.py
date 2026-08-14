@@ -1,16 +1,21 @@
-import os
-import sqlite3
-from typing import Optional
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import sqlite3
 
-app = FastAPI()
+app = FastAPI() # Create an instance of the app
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "local_crocdb.sqlite")
+# Allow browser requests from any origin (public search API)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Database helper function
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect('local_crocdb.sqlite')
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -20,7 +25,7 @@ class EntryRequest(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
-    platform: Optional[str] = None  # Or: platform: str | None = None
+    platform: str = None
 
 @app.post("/entry")
 def get_entry(req: EntryRequest):
