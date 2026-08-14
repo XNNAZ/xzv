@@ -25,7 +25,7 @@ class EntryRequest(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
-    platform: str = None
+    platform: str | None = None
 
 @app.post("/entry")
 def get_entry(req: EntryRequest):
