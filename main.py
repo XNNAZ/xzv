@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -19,7 +20,7 @@ class EntryRequest(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
-    platform: str = None
+    platform: Optional[str] = None  # Or: platform: str | None = None
 
 @app.post("/entry")
 def get_entry(req: EntryRequest):
